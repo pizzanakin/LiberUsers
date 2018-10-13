@@ -1,0 +1,14 @@
+name: LiberUsers
+main: net.libercraft.liberusers
+version: 1.0
+api-version: 1.13
+depend: [LiberCore]
+commands:
+  staff:
+    description: Activate staff mode
+    usage: /staff
+    aliases: [s]
+  adminchat:
+    description: Admin chat
+    usage: /adminchat <message>
+    aliases: [ac, a]
