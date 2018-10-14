@@ -3,6 +3,7 @@ package net.libercraft.liberusers;
 import org.bukkit.ChatColor;
 
 import net.libercraft.libercore.interfaces.Module;
+import net.libercraft.liberusers.CommandManager.UserCommand;
 
 public class LiberUsers extends Module {
 	private static LiberUsers instance;
@@ -10,6 +11,7 @@ public class LiberUsers extends Module {
 	private UserDatabase ud;
 	private UserManager um;
 	private RankManager rm;
+	private CommandManager cm;
 
 	@Override
 	public ChatColor colour() {
@@ -24,12 +26,13 @@ public class LiberUsers extends Module {
 		ud = new UserDatabase();
 		um = new UserManager();
 		rm = new RankManager();
+		cm = new CommandManager();
 		
 		getServer().getPluginManager().registerEvents(um, this);
 		getServer().getPluginManager().registerEvents(rm, this);
 		
-		getCommand("staff").setExecutor(rm);
-		getCommand("adminchat").setExecutor(new AdminChat());
+		for (UserCommand uc:UserCommand.values()) 
+			uc.register(this);
 	}
 
 	@Override
@@ -52,6 +55,10 @@ public class LiberUsers extends Module {
 	
 	public static RankManager getRM() {
 		return instance.rm;
+	}
+	
+	public static CommandManager getCM() {
+		return instance.cm;
 	}
 
 }

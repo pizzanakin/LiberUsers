@@ -11,8 +11,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.gmail.lpizzanakinl.pizzairc.FlowerBot;
-
 import net.libercraft.libercore.LiberCore;
 import net.libercraft.libercore.managers.MessageManager;
 import net.libercraft.liberusers.RankManager.Rank;

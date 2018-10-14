@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -17,10 +13,10 @@ import org.bukkit.permissions.PermissionAttachment;
 
 import net.libercraft.liberusers.UserManager.User;
 
-public class RankManager implements Listener, CommandExecutor {
+public class RankManager implements Listener {
 	
-	HashMap<UUID,PermissionAttachment> perms;
-	List<UUID> staff;
+	public static HashMap<UUID,PermissionAttachment> perms;
+	public static List<UUID> staff;
 	
 	public RankManager() {
 		perms = new HashMap<>();
@@ -43,28 +39,8 @@ public class RankManager implements Listener, CommandExecutor {
 		e.getPlayer().removeAttachment(attachment);
 		perms.remove(e.getPlayer().getUniqueId());
 	}
-
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!(sender instanceof Player))
-			return false;
-		Player player = (Player) sender;
-		User user = LiberUsers.getUD().getUserFromUUID(player.getUniqueId());
-		UUID uuid = user.mcUuid;
-		
-		if (user.rank <= 1) {
-			player.sendMessage("You do not have permission to use this command!");
-			return true;
-		}
-		
-		if (staff.contains(uuid)) 
-			trustedMode(user);
-		else
-			staffMode(user);
-		return true;
-	}
 	
-	public void staffMode(User u) {
+	public static void staffMode(User u) {
 		Rank rank = Rank.valueOf(u.rank);
 		
 		if (rank == Rank.OWNER) {
@@ -72,14 +48,12 @@ public class RankManager implements Listener, CommandExecutor {
 		} else 
 			for (String p:rank.getPermissions())
 				perms.get(u.mcUuid).setPermission(p, true);
-		
-		u.getPlayer().sendMessage("Staff mode has been activated!");
 
 		if (!staff.contains(u.mcUuid))
 			staff.add(u.mcUuid);
 	}
 	
-	private void trustedMode(User u) {
+	public static void trustedMode(User u) {
 		Rank rank = Rank.valueOf(u.rank);
 
 		if (rank == Rank.OWNER) {
@@ -87,8 +61,6 @@ public class RankManager implements Listener, CommandExecutor {
 		} else 
 			for (String p:rank.getPermissions())
 				perms.get(u.mcUuid).unsetPermission(p);
-		
-		u.getPlayer().sendMessage("Staff mode has been deactivated!");
 		
 		if (staff.contains(u.mcUuid))
 			staff.remove(u.mcUuid);
